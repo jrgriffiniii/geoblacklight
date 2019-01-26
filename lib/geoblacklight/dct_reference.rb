@@ -1,18 +1,18 @@
 module Geoblacklight
   ##
   # Parses an array of dct_references to create useful reference information
-  class Reference
+  class DctReference
     attr_reader :reference
 
     ##
-    # Initializes a Reference object using an Array
+    # Initializes a DctReference object using an Array
     # @param [Array] reference
     def initialize(reference)
       @reference = reference
     end
 
     ##
-    # The endpoint URL for a Geoblacklight::Reference
+    # The endpoint URL for a Geoblacklight::DctReference
     # @return [String]
     def endpoint
       @reference[1]
@@ -34,11 +34,11 @@ module Geoblacklight
 
     private
 
-    ##
-    # The URI used for this instance's creation
-    # @return [String]
-    def uri
-      @reference[0]
-    end
+      ##
+      # The URI used for this instance's creation
+      # @return [String]
+      def uri
+        @reference[0]
+      end
   end
 end

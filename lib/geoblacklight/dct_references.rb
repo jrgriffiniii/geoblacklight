@@ -5,7 +5,7 @@ module Geoblacklight
     def initialize(document, reference_field = Settings.FIELDS.REFERENCES)
       @document = document
       @reference_field = reference_field
-      @refs = parse_references.map { |ref| Reference.new(ref) }
+      @refs = parse_references.map { |ref| DctReference.new(ref) }
     end
 
     ##
@@ -69,56 +69,59 @@ module Geoblacklight
 
     private
 
-    ##
-    # Parses the references field of a document
-    # @return [Hash]
-    def parse_references
-      if @document[reference_field].nil?
-        {}
-      else
-        JSON.parse(@document[reference_field])
+      ##
+      # Parses the references field of a document
+      # @return [Hash]
+      def parse_references
+        if @document[reference_field].nil?
+          {}
+        else
+          JSON.parse(@document[reference_field])
+        end
       end
-    end
 
-    ##
-    # Download hash for a static file download
-    # @return (see #downloads_by_format)
-    def file_download
-      { file_download: download.to_hash }
-    end
-
-    ##
-    # Download hash for a Shapefile file (currently only vector) with a wms and wfs reference
-    # present
-    # @return (see #downloads_by_format)
-    def vector_download_formats
-      { shapefile: wfs.to_hash,
-        kmz: wms.to_hash,
-        geojson: wfs.to_hash } if wms.present? && wfs.present?
-    end
-
-    ##
-    # Download hash for a GeoTiff file with a WMS reference present
-    # @return (see #downloads_by_format)
-    def geotiff_download_formats
-      { geotiff: wms.to_hash } if wms.present?
-    end
-
-    ##
-    # Download hash for an ArcGRID file with a WMS reference present
-    # @return (see #downloads_by_format)
-    def arcgrid_download_formats
-      { geotiff: wms.to_hash } if wms.present?
-    end
-
-    ##
-    # Adds a call to references for defined URI keys
-    def method_missing(m, *args, &b)
-      if Geoblacklight::Constants::URI.key?(m)
-        references m
-      else
-        super
+      ##
+      # Download hash for a static file download
+      # @return (see #downloads_by_format)
+      def file_download
+        { file_download: download.to_hash }
       end
-    end
+
+      ##
+      # Download hash for a Shapefile file (currently only vector) with a wms and wfs reference
+      # present
+      # @return (see #downloads_by_format)
+      def vector_download_formats
+        return unless wms.present? & wfs.present?
+        {
+          shapefile: wfs.to_hash,
+          kmz: wms.to_hash,
+          geojson: wfs.to_hash
+        }
+      end
+
+      ##
+      # Download hash for a GeoTiff file with a WMS reference present
+      # @return (see #downloads_by_format)
+      def geotiff_download_formats
+        { geotiff: wms.to_hash } if wms.present?
+      end
+
+      ##
+      # Download hash for an ArcGRID file with a WMS reference present
+      # @return (see #downloads_by_format)
+      def arcgrid_download_formats
+        { geotiff: wms.to_hash } if wms.present?
+      end
+
+      ##
+      # Adds a call to references for defined URI keys
+      def method_missing(m, *args, &b)
+        if Geoblacklight::Constants::URI.key?(m)
+          references m
+        else
+          super
+        end
+      end
   end
 end
