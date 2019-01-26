@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Geoblacklight::Reference do
+describe Geoblacklight::DctReference do
   let(:typical_reference) do
     described_class.new(['http://www.opengis.net/def/serviceType/ogc/wms', 'http://hgl.harvard.edu:8080/geoserver/wms'])
   end

@@ -108,7 +108,7 @@ describe Geoblacklight::DctReferences do
   describe 'refs' do
     it 'is a set of enumberable references' do
       complex_shapefile.refs.each do |reference|
-        expect(reference).to be_an Geoblacklight::Reference
+        expect(reference).to be_an Geoblacklight::DctReference
       end
     end
   end
@@ -139,7 +139,7 @@ describe Geoblacklight::DctReferences do
   describe 'direct_download' do
     it 'returns the direct download link' do
       download = complex_shapefile.download
-      expect(download).to be_an Geoblacklight::Reference
+      expect(download).to be_an Geoblacklight::DctReference
       expect(download.endpoint).to eq('http://example.com/urn:hul.harvard.edu:HARVARD.SDE2.TG10USAIANNH/data.zip')
       expect(direct_download_only.download.endpoint).to eq 'http://example.com/layer-id-geotiff.tiff'
     end

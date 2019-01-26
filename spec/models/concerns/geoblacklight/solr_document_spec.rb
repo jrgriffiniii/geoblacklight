@@ -95,12 +95,12 @@ describe Geoblacklight::SolrDocument do
         }
       end
       it 'returns a direct download hash' do
-        expect_any_instance_of(Geoblacklight::Reference).to receive(:to_hash)
+        expect_any_instance_of(Geoblacklight::DctReference).to receive(:to_hash)
         document.direct_download
       end
     end
     it 'returns nil if no direct download' do
-      expect_any_instance_of(Geoblacklight::Reference).not_to receive(:to_hash)
+      expect_any_instance_of(Geoblacklight::DctReference).not_to receive(:to_hash)
       expect(document.direct_download).to be_nil
     end
   end
@@ -208,7 +208,7 @@ describe Geoblacklight::SolrDocument do
   end
   describe 'checked_endpoint' do
     let(:document_attributes) { {} }
-    let(:reference) { Geoblacklight::Reference.new(['http://www.opengis.net/def/serviceType/ogc/wms', 'http://www.example.com/wms']) }
+    let(:reference) { Geoblacklight::DctReference.new(['http://www.opengis.net/def/serviceType/ogc/wms', 'http://www.example.com/wms']) }
     it 'returns endpoint if available' do
       expect_any_instance_of(Geoblacklight::DctReferences).to receive(:wms).and_return(reference)
       expect(document.checked_endpoint('wms')).to eq 'http://www.example.com/wms'
