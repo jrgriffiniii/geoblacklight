@@ -290,7 +290,7 @@ describe GeoblacklightHelper, type: :helper do
 
   describe '#first_metadata?' do
     let(:metadata) { instance_double(Geoblacklight::Metadata::Base) }
-    let(:references) { instance_double(Geoblacklight::References) }
+    let(:references) { instance_double(Geoblacklight::DctReferences) }
     let(:document) { instance_double(SolrDocument) }
 
     before do

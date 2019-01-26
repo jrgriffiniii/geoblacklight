@@ -28,7 +28,7 @@ module Geoblacklight
     end
 
     def references
-      References.new(self)
+      DctReferences.new(self)
     end
 
     def downloads
