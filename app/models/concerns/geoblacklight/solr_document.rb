@@ -31,8 +31,12 @@ module Geoblacklight
       References.new(self)
     end
 
+    def downloads
+      Array.wrap(references.download)
+    end
+
     def direct_download
-      references.download.to_hash unless references.download.blank?
+      downloads.first.to_hash unless downloads.first.blank?
     end
 
     def hgl_download
