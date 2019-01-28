@@ -167,7 +167,7 @@ describe Geoblacklight::SolrDocument do
   describe 'item_viewer' do
     let(:document_attributes) { {} }
     it 'is a ItemViewer' do
-      expect(document.item_viewer).to be_an Geoblacklight::ItemViewer
+      expect(document.item_viewer).to be_an Geoblacklight::ItemViewer::DctReferencesItemViewer
     end
   end
   describe 'viewer_protocol' do
