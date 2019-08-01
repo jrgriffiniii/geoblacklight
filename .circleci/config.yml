@@ -1,83 +1,6 @@
 ---
 version: 2.1
 jobs:
-  bundle:
-    parameters:
-      ruby_version:
-        type: string
-      rails_version:
-        type: string
-    working_directory: ~/geoblacklight
-    docker:
-      - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
-        environment:
-          BUNDLE_JOBS: 4
-          BUNDLE_RETRY: 3
-          GEM_HOME: /home/circleci/geoblacklight/vendor/bundle
-          BUNDLE_PATH: /home/circleci/geoblacklight/vendor/bundle
-          RAILS_ENV: test
-          RAILS_VERSION: << parameters.rails_version >>
-      - image: solr:7-alpine
-        command: bin/solr -cloud -noprompt -f -p 8983
-    steps:
-      - checkout
-      # Restore bundle cache
-      - restore_cache:
-          name: Restore bundle cache
-          keys:
-            - geoblacklight-<< parameters.ruby_version >>-{{ checksum "Gemfile" }}-{{ checksum "geoblacklight.gemspec" }}
-      # Install gems and run specs
-      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
-      # Run the test suites
-      - run:
-          name: Generate the test app
-          command: |
-            [ -e ./.internal_test_app ] || bundle exec rake engine_cart:generate
-      - run:
-          name: Compile the assets for Webpack
-          command: |
-            cd .internal_test_app
-            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
-            rm config/webpacker.yml
-            bundle exec rails webpacker:install
-            bundle exec rails webpacker:compile
-      - run:
-          name: Run the RSpec test suites
-          command: bundle exec rake geoblacklight:coverage
-      - run:
-          name: Run the Teaspoon test suites
-          command: bundle exec rake teaspoon
-      # Store bundle cache
-      - save_cache:
-          name: Store bundle cache
-          key: geoblacklight-<< parameters.ruby_version >>-{{ checksum "Gemfile" }}-{{ checksum "geoblacklight.gemspec" }}
-          paths:
-            - vendor/bundle
-            - .internal_test_app
-
-  rubocop:
-    parameters:
-      ruby_version:
-        type: string
-      rails_version:
-        type: string
-    working_directory: ~/geoblacklight
-    docker:
-      - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
-        environment:
-          GEM_HOME: /home/circleci/geoblacklight/vendor/bundle
-          BUNDLE_PATH: /home/circleci/geoblacklight/vendor/bundle
-          RAILS_ENV: test
-    steps:
-      - checkout
-      # Restore bundle cache
-      - restore_cache:
-          name: Restore bundle cache
-          keys:
-            - geoblacklight-<< parameters.ruby_version >>-{{ checksum "Gemfile" }}-{{ checksum "geoblacklight.gemspec" }}
-      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
-      - run: bundle exec rake rubocop
-
   test:
     parameters:
       ruby_version:
@@ -111,6 +34,17 @@ jobs:
           name: Wait for Solr
           command: dockerize -wait tcp://localhost:8983 -timeout 1m
       - run:
+          name: Generate the test app
+          command: |
+            [ -e ./.internal_test_app ] || bundle exec rake engine_cart:generate
+      # Store bundle cache
+      - save_cache:
+          name: Store bundle cache
+          key: geoblacklight-<< parameters.ruby_version >>-{{ checksum "Gemfile" }}-{{ checksum "geoblacklight.gemspec" }}
+          paths:
+            - vendor/bundle
+            - .internal_test_app
+      - run:
           name: Load config into solr
           command: |
             cd .internal_test_app/solr/conf
@@ -118,12 +52,17 @@ jobs:
             curl -H "Content-type:application/octet-stream" --data-binary @solr_config.zip "http://localhost:8983/solr/admin/configs?action=UPLOAD&name=solrconfig"
             curl -H 'Content-type: application/json' http://localhost:8983/api/collections/ -d '{create: {name: blacklight-core, config: solrconfig, numShards: 1}}'
       - run:
-          name: Seed Solr
+          name: Prepare the test app
           command: |
             cd .internal_test_app
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+            rm config/webpacker.yml
+            bundle exec rails webpacker:install
+            bundle exec rails webpacker:compile
             bundle exec rake geoblacklight:index:seed
             bundle exec rake geoblacklight:downloads:mkdir
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+      - run: bundle exec rake rubocop
       - run:
           name: Run the RSpec test suites
           command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
@@ -132,35 +71,11 @@ workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - bundle:
-          name: "bundle_ruby2-5_rails5-1"
-          ruby_version: "2.5.5"
-          rails_version: "5.1.7"
-      - rubocop:
-          name: "rubocop_ruby2-5_rails5-1"
-          ruby_version: "2.5.5"
-          rails_version: "5.1.7"
-          requires:
-            - bundle_ruby2-5_rails5-1
       - test:
           name: "test_ruby2-5_rails5-1"
           ruby_version: "2.5.5"
           rails_version: "5.1.7"
-          requires:
-            - bundle_ruby2-5_rails5-1
-      - bundle:
-          name: "bundle_ruby2-5_rails5-2"
-          ruby_version: "2.5.5"
-          rails_version: "5.2.3"
-      - rubocop:
-          name: "rubocop_ruby2-5_rails5-2"
-          ruby_version: "2.5.5"
-          rails_version: "5.2.3"
-          requires:
-            - bundle_ruby2-5_rails5-2
       - test:
           name: "test_ruby2-5_rails5-2"
           ruby_version: "2.5.5"
           rails_version: "5.2.3"
-          requires:
-            - bundle_ruby2-5_rails5-2
