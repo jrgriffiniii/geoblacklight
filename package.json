@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/geoblacklight/geoblacklight.git"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "engines": {
     "node": ">=6.14.4",
     "yarn": ">=1.0.0"
@@ -19,6 +22,7 @@
     "@babel/register": "^7.5.5",
     "@rails/webpacker": "https://github.com/rails/webpacker.git",
     "babel-loader": "^8.0.6",
+    "jest": "^24.8.0",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
   }
