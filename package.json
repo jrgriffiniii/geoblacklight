@@ -1,16 +1,25 @@
 {
-    "name": "geoblacklight",
-    "version": "2.1.2",
-    "description": "",
-    "homepage": "https://github.com/geoblacklight/geoblacklight",
-    "bugs": "https://github.com/geoblacklight/geoblacklight/issues",
-    "license": "Apache-2.0",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/geoblacklight/geoblacklight.git"
-    },
-    "engines": {
-      "node": ">=6.14.4",
-      "yarn": ">=1.0.0"
-    }
+  "name": "geoblacklight",
+  "version": "2.1.2",
+  "description": "",
+  "homepage": "https://github.com/geoblacklight/geoblacklight",
+  "bugs": "https://github.com/geoblacklight/geoblacklight/issues",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geoblacklight/geoblacklight.git"
+  },
+  "engines": {
+    "node": ">=6.14.4",
+    "yarn": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@rails/webpacker": "https://github.com/rails/webpacker.git",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
+  }
 }
