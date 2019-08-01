@@ -45,6 +45,9 @@ module Geoblacklight
       # @return [String, nil] metadata string or nil if there is a
       # connection error
       def retrieve_metadata
+        # rubocop:disable Rails/Output
+        puts @reference.endpoint
+        # rubocop:enable Rails/Output
         connection = Faraday.new(url: @reference.endpoint) do |conn|
           conn.use FaradayMiddleware::FollowRedirects
           conn.adapter Faraday.default_adapter
