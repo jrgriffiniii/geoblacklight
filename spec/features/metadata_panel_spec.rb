@@ -15,12 +15,12 @@ feature 'Metadata tools' do
     before do
       allow(iso19139_response).to receive(:body).and_return(iso19139)
       allow(iso19139_response).to receive(:status).and_return(200)
-      allow(iso19139_connection).to receive(:get).and_return(response)
+      allow(iso19139_connection).to receive(:get).and_return(iso19139_response)
       allow(Faraday).to receive(:new).with(url: 'https://raw.githubusercontent.com/OpenGeoMetadata/edu.stanford.purl/master/cg/357/zz/0321/iso19139.xml').and_return(iso19139_connection)
 
       allow(fgdc_response).to receive(:body).and_return(fgdc)
       allow(fgdc_response).to receive(:status).and_return(200)
-      allow(fgdc_connection).to receive(:get).and_return(response)
+      allow(fgdc_connection).to receive(:get).and_return(fgdc_response)
       allow(Faraday).to receive(:new).with(url: 'https://raw.githubusercontent.com/OpenGeoMetadata/edu.harvard/master/217/121/227/77/fgdc.xml').and_return(fgdc_connection)
 
       allow(response).to receive(:body).and_return(mods)
@@ -28,7 +28,7 @@ feature 'Metadata tools' do
       allow(connection).to receive(:get).and_return(response)
       allow(Faraday).to receive(:new).with(url: 'http://purl.stanford.edu/cg357zz0321.mods').and_return(connection)
 
-      allow(Faraday).to receive(:new).and_call_original
+      allow(Faraday).to receive(:new).with(hash_including(url: 'http://127.0.0.1:8983/solr/blacklight-core/')).and_call_original
     end
 
     scenario 'shows up as HTML' do

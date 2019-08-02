@@ -1,3 +1,4 @@
+require 'pry-byebug'
 module Geoblacklight
   module Metadata
     ##
@@ -61,6 +62,9 @@ module Geoblacklight
           Geoblacklight.logger.error error.inspect
           ''
         rescue Faraday::Error::TimeoutError => error
+          Geoblacklight.logger.error error.inspect
+          ''
+        rescue OpenSSL::SSL::SSLError => error
           Geoblacklight.logger.error error.inspect
           ''
         end
