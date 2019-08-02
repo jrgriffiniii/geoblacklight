@@ -26,8 +26,9 @@ require 'rails-controller-testing' if Rails::VERSION::MAJOR >= 5
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'selenium-webdriver'
+require 'capybara-screenshot'
 
-Capybara.register_driver(:headless_chrome) do |app|
+Capybara.register_driver(:selenium) do |app|
   Capybara::Selenium::Driver.load_selenium
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
     opts.args << '--headless'
@@ -43,7 +44,7 @@ Capybara.register_driver(:headless_chrome) do |app|
                                  options: browser_options)
 end
 
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :selenium
 Capybara.default_max_wait_time = 120
 
 require 'geoblacklight'

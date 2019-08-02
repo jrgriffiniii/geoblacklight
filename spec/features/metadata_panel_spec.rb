@@ -47,7 +47,8 @@ feature 'Metadata tools' do
       visit solr_document_path 'stanford-cg357zz0321'
       expect(page).to have_css 'li.metadata a', text: 'Metadata'
       click_link 'Metadata'
-      using_wait_time 15 do
+      using_wait_time 60 do
+        page.save_screenshot('screenshot.png')
         within '.metadata-view' do
           expect(page).to have_css '.pill-metadata', text: 'MODS'
           expect(page).to have_css '.CodeRay'

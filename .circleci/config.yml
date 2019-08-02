@@ -65,7 +65,13 @@ jobs:
       - run: bundle exec rake rubocop
       - run:
           name: Run the RSpec test suites
-          command: bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+          command: |
+            bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - store_test_results:
+          path: .internal_test_app/tmp/capybara
+      - store_artifacts:
+          path: .internal_test_app/tmp/capybara
+          destination: capybara
 
 workflows:
   version: 2

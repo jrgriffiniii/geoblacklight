@@ -46,4 +46,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.16'
   spec.add_development_dependency 'foreman'
   spec.add_development_dependency 'teaspoon'
+  spec.add_development_dependency 'capybara-screenshot'
 end
