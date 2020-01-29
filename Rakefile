@@ -25,11 +25,6 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.verbose = false
 end
 
-desc 'Run Teaspoon JavaScript tests'
-task :teaspoon do
-  system('teaspoon --require=.internal_test_app/spec/teaspoon_env.rb')
-end
-
 desc 'Run test suite'
 task ci: ['geoblacklight:generate'] do
   SolrWrapper.wrap do |solr|
@@ -41,8 +36,6 @@ task ci: ['geoblacklight:generate'] do
       Rake::Task['geoblacklight:coverage'].invoke
     end
   end
-  # Run JavaScript tests
-  Rake::Task['teaspoon'].invoke
 end
 
 namespace :geoblacklight do
