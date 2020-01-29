@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'solr_wrapper'
   spec.add_development_dependency 'rails-controller-testing'
-  spec.add_development_dependency 'rspec-rails', '4.0.0.beta4'
+  spec.add_development_dependency 'rspec-rails', '4.0.0.beta2'
   spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency 'capybara', '>= 2.5.0'
   spec.add_development_dependency 'webdrivers'
