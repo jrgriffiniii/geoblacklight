@@ -96,6 +96,15 @@ module Geoblacklight
       FileUtils.mkdir_p('app/assets/images') unless File.directory?('app/assets/images')
     end
 
+    # Ensure that the GeoBlacklight assets are added
+    def add_geoblacklight_javascript
+      if Rails.version =~ /^6\./
+        inject_into_file 'app/assets/javascripts/application.js', after: '//= require blacklight/blacklight' do
+          "\n//= require geoblacklight\n"
+        end
+      end
+    end
+
     def bundle_install
       Bundler.with_clean_env do
         run 'bundle install'

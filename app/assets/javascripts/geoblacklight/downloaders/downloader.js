@@ -24,7 +24,7 @@
         return;
       }
       this.downloading = true;
-      var url = this.$el.data('downloadPath');
+      var url = this.$el.data('download-path');
       this.options.spinner.show();
       $.getJSON(url)
         .done(L.Util.bind(this.complete, this))

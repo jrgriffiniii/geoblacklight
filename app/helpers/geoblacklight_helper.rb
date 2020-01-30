@@ -76,7 +76,7 @@ module GeoblacklightHelper
   end
 
   def render_facet_tags(facet)
-    request_facets = facets_from_request(facet, response)
+    request_facets = facets_from_request(facet, @response)
     render_facet_limit(request_facets.first,
                        partial: 'facet_tag_item',
                        layout: 'facet_tag_layout')
