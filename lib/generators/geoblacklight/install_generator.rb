@@ -85,6 +85,10 @@ module Geoblacklight
 
     def disable_turbolinks
       gsub_file('app/assets/javascripts/application.js', %r{\/\/= require turbolinks}, '')
+
+      if Rails.version =~ /^6\./
+        gsub_file('app/javascript/packs/application.js', 'require("turbolinks").start()', '')
+      end
     end
 
     def update_application_name
