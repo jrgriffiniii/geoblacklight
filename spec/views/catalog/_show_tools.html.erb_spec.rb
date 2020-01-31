@@ -18,8 +18,8 @@ describe 'catalog/_show_tools.html.erb', type: :view do
     let(:document_actions) { blacklight_config.show.document_actions }
 
     it 'renders a document action' do
-      # Rails 5.1.z use older Blacklight releases
-      if Rails.version =~ /5\.1/
+      # Rails 5.1.z and 5.2.z use older Blacklight releases
+      if Rails.version =~ /^5\./
         allow(view).to receive(:some_action_solr_document_path).with(document).and_return 'x'
       else
         allow(view).to receive(:some_action_solr_document_path).with(document, only_path: true).and_return 'x'
